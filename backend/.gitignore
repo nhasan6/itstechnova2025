@@ -1,0 +1,24 @@
+# API keys, MongoDB URI
+.env 
+.env.local
+.env.development
+.env.production
+
+# These will install with npm install
+node_modules/
+
+# MacOS
+.DS_Store 
+
+# IDE specific files
+.vscode/
+
+# React Native
+.expo/
+.expo-shared/
+.cache/
+
+
+# Build tools
+build/ 
+dist/
