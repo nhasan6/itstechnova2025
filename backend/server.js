@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('./db');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv').config();
 
@@ -15,6 +14,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
+// add routes here
 
 // Start server
 app.listen(port, () => {
