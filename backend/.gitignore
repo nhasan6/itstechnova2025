@@ -1,0 +1,17 @@
+# API keys, MongoDB URI
+.env 
+
+# These will install with npm install
+node_modules 
+
+# MacOS
+.DS_Store 
+
+# IDE specific files
+.vscode/
+
+
+dist/
+
+# Build tools
+build/ 
