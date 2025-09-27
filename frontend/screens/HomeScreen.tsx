@@ -3,9 +3,9 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 
 
-useEffect(() => {
-  api.get("/piggybanks").then(res => console.log(res.data));
-}, []);
+// useEffect(() => {
+//   api.get("/piggybanks").then(res => console.log(res.data));
+// }, []);
 
 
 export default function HomeScreen({ navigation }) {
