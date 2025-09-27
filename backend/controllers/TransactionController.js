@@ -26,27 +26,40 @@ const getTransactionById = async (req, res) => {
 
 const createTransaction = async (req, res) => {
     try {
-        const piggyBank = await Transaction.create(req.body);
-        res.status(201).json(piggyBank);
+        const transaction = await Transaction.create(req.body);
+        res.status(201).json(transaction);
     } catch (err) {
         res.status(400).json({error: err.message});
     }
 }
 
-const allocateBalance = async (req,res) => {
+const allocateTransaction = async (req,res) => {
     try {
-        const { piggyBankId, amount } = req.body;
+        const { transactionId, piggyBankId } = req.body;
 
-        const piggyBank = await Transaction.findById(piggyBankId);
+        const piggyBank = await PiggyBank.findById(piggyBankId);
 
-        if (!piggyBank) {
+        if (!piggyBank)  {
             return res.status(404).json({error: 'not found'});
         }
-        piggyBank.balance = piggyBank.balance + amount;
 
-        await piggyBank.save()
+        const transaction = await Transaction.findById(transactionId);
 
-        res.status(200).json(piggyBank);
+        if (!transaction)  {
+            return res.status(404).json({error: 'not found'});
+        }
+
+        if (transaction.piggyBankId) {
+            return res.status(400).json({error: 'already allocated'});
+        }
+
+        // use static method
+        const updatedTransaction = await Transaction.allocate(transactionId, piggyBankId);
+
+        res.status(200).json({
+            message: "Transaction allocated successfully",
+            transaction: updatedTransaction,
+            piggyBankId: piggyBankId });
     } catch (err) {
         res.status(500).json({error: err.message})
     }
@@ -56,6 +69,5 @@ module.exports = {
     getTransactions,
     getTransactionById,
     createTransaction,
-    allocateBalance,
-    openBank
+    allocateTransaction,
 };

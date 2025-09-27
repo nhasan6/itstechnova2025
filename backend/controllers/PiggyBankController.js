@@ -36,19 +36,22 @@ const openBank = async (req,res) => {
         const piggyBank = await PiggyBank.findById(piggyBankId);
 
         if (!piggyBank) {
-            return res.status(404).json({error: 'not found'});
+            return res.status(400).json({error: 'Piggy Bank not found'});
         }
+        if ((piggyBank.balance < piggyBank.goal) || piggyBank.opened) {
+            return res.status(400).json({error: 'Bank has not reached goal or it has already been opened'});
 
-        if ((piggyBank.balance >= piggyBank.goal) && !piggyBank.opened) {
-            piggyBank.opened = true;
-            piggyBank.balance -= piggyBank.goal;
         }
+        piggyBank.opened = true;
+        piggyBank.balance -= piggyBank.goal;
         await piggyBank.save();
         res.status(200).json(piggyBank);
+
     } catch (err) {
         res.status(500).json({error: err.message})
     }
 }
+
 module.exports = {
     getPiggyBanks,
     getPiggyBankById,

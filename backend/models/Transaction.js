@@ -31,11 +31,11 @@ const transactionSchema = new mongoose.Schema({
 
 /**
  * @description Allocate a transaction to a specific piggy bank.
- * @param {number} transactionId The ID of the transaction.
+ * @param {string} transactionId The ID of the transaction.
  * @param {string} piggybankId The ID of the piggy bank to allocate to.
  */
 transactionSchema.statics.allocate = async function(transactionId, piggybankId) {
-    // 1. Find the transaction and update its piggyBankId
+    //  Find the transaction and update its piggyBankId
     const transaction = await this.findByIdAndUpdate(
         transactionId,
         { piggyBankId: piggybankId },

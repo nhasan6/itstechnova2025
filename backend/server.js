@@ -1,20 +1,35 @@
 const express = require('express');
-const connectDB = require('./config/db');
 const dotenv = require('dotenv').config();
 
+// console.log('MONGO_URI loaded:', process.env.MONGO_URI);
+
+
+const connectDB = require('./config/db');
+
+// Import routes
+const piggyBankRoutes = require('./routes/PiggyBankRoutes');
+const TransactionRoutes = require('./routes/TransactionRoutes');
+
 const app = express();
-const port = process.env.PORT || 5000;
 
 connectDB();
 
-// Middleware
+// Middleware to parse JSON body
 app.use(express.json());
 
-// Test route
+// test route
 app.get('/', (req, res) => {
   res.send('Hello from the backend!');
 });
-// add routes here
+
+// custom routes
+app.use('/api/piggybanks', piggyBankRoutes);
+app.use('/api/transactions', TransactionRoutes);
+
+
+
+
+const port = process.env.PORT || 3000;
 
 // Start server
 app.listen(port, () => {

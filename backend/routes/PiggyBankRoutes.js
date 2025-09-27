@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const PiggyBankController = require('../controllers/PiggyBankController');
 
-router.get('/piggybanks', piggyBankController.getPiggyBanks);
-router.get('/piggybanks/:id', piggyBankController.getPiggyBankById);
-router.post('/piggybanks', piggyBankController.createPiggyBank);
-router.patch('/piggybanks/:id', piggyBankController.openBank);
+router.get('/', PiggyBankController.getPiggyBanks);
+router.get('/:id', PiggyBankController.getPiggyBankById);
+router.post('/', PiggyBankController.createPiggyBank);
+router.patch('/:id', PiggyBankController.openBank); 
 
 module.exports = router;
 

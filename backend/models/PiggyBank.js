@@ -14,7 +14,6 @@ const piggyBankSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        required: true,
         default: 0.0,
     },
     goal: {
@@ -48,7 +47,7 @@ const piggyBankSchema = new mongoose.Schema({
  * @description Add funds to a piggy bank and link the transaction.
  * @param {string} piggybankId The ID of the piggy bank to update.
  * @param {number} amount The amount to add.
- * @param {number} transactionId The ID of the transaction to link.
+ * @param {string} transactionId The ID of the transaction to link.
  */
 piggyBankSchema.statics.addFunds = async function(piggybankId, amount, transactionId) {
     // The `timestamps: true` option automatically handles `updatedAt`
