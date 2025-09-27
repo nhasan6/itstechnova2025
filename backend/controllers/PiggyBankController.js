@@ -40,7 +40,6 @@ const openBank = async (req,res) => {
         }
         if ((piggyBank.balance < piggyBank.goal) || piggyBank.opened) {
             return res.status(400).json({error: 'Bank has not reached goal or it has already been opened'});
-
         }
         piggyBank.opened = true;
         piggyBank.balance -= piggyBank.goal;

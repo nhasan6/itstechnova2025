@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// obtains connection string from the env. file 
 const MONGO_URI = process.env.MONGO_URI;
 
 const connectDB = async () => {
