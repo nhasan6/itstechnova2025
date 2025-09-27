@@ -1,6 +1,7 @@
 # itstechnova2025
 
 #About
+
 Girl Math is a is a personal finance management app that helps users track income, expenses, and savings goals. It provides insights and visualizations to make budgeting simple and effective.
 
 #Features
@@ -8,7 +9,7 @@ Girl Math is a is a personal finance management app that helps users track incom
 💰 Log Free Money
   - User inputs instances where they consider money saved or “earned for free”. (i.e. not buying coffee, skipping a meal, saving on transportation)
   - Start by asking income, common spending habits, personal goals
-- Make buttons for each type of average spending habit user has (coffe, breakfast, eating out, luxuries,)
+  - Make buttons for each type of average spending habit user has (coffe, breakfast, eating out, luxuries,)
 
 😊 Allocate Free Money
   - Treat your self
