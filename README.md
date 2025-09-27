@@ -2,7 +2,7 @@
 
 #About
 
-Girl Math is a is a personal finance management app that helps users track income, expenses, and savings goals. It provides insights and visualizations to make budgeting simple and effective.
+Girl Math is a personal finance management app that helps users track income, expenses, and savings goals. It provides insights and visualizations to make budgeting simple, fun, and effective.
 
 #Features
 
@@ -25,4 +25,9 @@ Girl Math is a is a personal finance management app that helps users track incom
   - May be separated by different accounts? Like different debit/credit cards
   - Add in visuals like graphical representation, add a button to decide how data should be displayed (ie, piggybank, graphs, etc)
   - When goal is achieved you must shatter the piggy bank by clicking then a celebration is made specific to the goal
+
+#Why Girl Math?
+  - Makes budgeting enjoyable and visually engaging.
+  - Encourages mindful spending through tracking and visualization.
+  - Empowers users to save without feeling restricted.
 
