@@ -1,30 +1,30 @@
-const PiggyBank = require('../models/PiggyBank') 
+const Transaction = require('../models/Transaction') 
 
-const getPiggyBanks = async (req,res) => {
+const getTransactions = async (req,res) => {
     try {
-        const piggybanks = PiggyBank.find();
-        res.status(200).json(piggybanks);
+        const transactions = Transaction.find();
+        res.status(200).json(transactions);
     } catch (err) {
         res.status(500).json({message: 'Error fetching transactions'});
     }
 }
 
-const getPiggyBankById = async (req, res) => {
+const getTransactionById = async (req, res) => {
     try {
-        const piggybank = await PiggyBank.findById(req.params.id);
-        if (!piggybank) {
+        const transaction = await Transaction.findById(req.params.id);
+        if (!transaction) {
             res.status(404).json({error: 'not found'});
         } else {
-            res.status(200).json(piggybank);
+            res.status(200).json(transaction);
         } 
     } catch (err) {
         res.status(500).json({error: err.message}); x
     }
 }
 
-const createPiggyBank = async (req, res) => {
+const createTransaction = async (req, res) => {
     try {
-        const piggyBank = await PiggyBank.create(req.body);
+        const piggyBank = await Transaction.create(req.body);
         res.status(201);
     } catch (err) {
         res.status(400).json({error: err.message});
