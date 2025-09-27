@@ -1,144 +1,194 @@
-const { MongoClient, ObjectId } = require('mongodb');
-const { performance } = require('perf_hooks');
+const mongoose = require('mongoose');
 
-// Replace with your Atlas DB credentials
-const uri = "mongodb+srv://mayyuchencao:2025TechNova@25technova.cm7fhyt.mongodb.net/?retryWrites=true&w=majority&appName=25TechNova";
-const client = new MongoClient(uri);
+// Your MongoDB connection URI
+const uri = "mongodb+srv://mayyuchencao:2025TechNova@25technova.cm7fhyt.mongodb.net/girlmath?retryWrites=true&w=majority&appName=25TechNova";
 
-// Global collection variables
-let piggybanks;
-let transactions;
-
-class PiggyBank {
-    constructor(name, type, goal, icon_id = "default_piggy") {
-        this.data = {
-            name: name,
-            type: type,         // savings, treat, sos, debt, custom
-            balance: 0.0,
-            goal: goal,
-            completed: false,
-            opened: false,
-            transactions: [],   // This will store transaction ObjectIds
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            iconId: icon_id
-        };
-    }
-
-    async save() {
-        const result = await piggybanks.insertOne(this.data);
-        this.data._id = result.insertedId;
-        return this.data._id;
-    }
-
-    static async getAll() {
-        // .find() returns a cursor, .toArray() gets all documents
-        return await piggybanks.find({}).toArray();
-    }
-
-    static async getById(piggybankId) {
-        // In the JS driver, ObjectId needs to be instantiated with 'new'
-        return await piggybanks.findOne({ "_id": new ObjectId(piggybankId) });
-    }
-
-    static async addFunds(piggybankId, amount, transactionId) {
-        await piggybanks.updateOne(
-            { "_id": new ObjectId(piggybankId) },
-            {
-                $inc: { "balance": amount },
-                $push: { "transactions": new ObjectId(transactionId) },
-                $set: { "updatedAt": new Date() }
-            }
-        );
-    }
-}
-
-
-class Transaction {
-    constructor(amount, label, source, piggyBankId = null, note = "") {
-        this.data = {
-            amount: amount,
-            label: label,
-            source: source,       // manual, e-transfer, cash, etc.
-            piggyBankId: piggyBankId, // Use null for unallocated
-            note: note,
-            createdAt: new Date()
-        };
-    }
-
-    async save() {
-        const result = await transactions.insertOne(this.data);
-        this.data._id = result.insertedId;
-        return this.data._id;
-    }
-
-    static async getUnallocated() {
-        // In JS, Python's `None` is `null`
-        return await transactions.find({ "piggyBankId": null }).toArray();
-    }
-
-    static async allocate(transactionId, piggybankId) {
-        // 1. Update the transaction to link it to the piggy bank
-        await transactions.updateOne(
-            { "_id": new ObjectId(transactionId) },
-            { "$set": { "piggyBankId": new ObjectId(piggybankId) } }
-        );
-
-        // 2. Get the transaction to find its amount
-        const tx = await transactions.findOne({ "_id": new ObjectId(transactionId) });
-        if (tx) {
-            // 3. Add the funds to the piggy bank
-            await PiggyBank.addFunds(piggybankId, tx.amount, transactionId);
-        } else {
-            console.error("Could not find transaction to allocate.");
-        }
-    }
-}
-
-
-// Main function to run the demonstration
-async function main() {
+const connectDB = async () => {
     try {
-        // Connect to the database
-        await client.connect();
-        console.log("Connected to MongoDB Atlas!");
-
-        const db = client.db("girlmath");
-        piggybanks = db.collection("piggybanks");
-        transactions = db.collection("transactions");
-
-        // 1. Create a new PiggyBank
-        const vacation = new PiggyBank("Vacation Fund", "savings", 100.0);
-        const piggyId = await vacation.save();
-        console.log("PiggyBank created with id:", piggyId);
-
-        // 2. Create a new Transaction
-        const coffeeSkip = new Transaction(5.0, "Skipped Coffee", "manual");
-        const txId = await coffeeSkip.save();
-        console.log("Transaction created with id:", txId);
-
-        // 3. Allocate the Transaction to the PiggyBank
-        await Transaction.allocate(txId, piggyId);
-        console.log("Allocated $5 to Vacation Fund");
-
-        // 4. Show all PiggyBanks
-        const allPiggyBanks = await PiggyBank.getAll();
-        console.log("\n--- All PiggyBanks in DB ---");
-        allPiggyBanks.forEach(pb => console.log(pb));
-        console.log("----------------------------");
-
-        // 5. Show unallocated Transactions
-        const unallocated = await Transaction.getUnallocated();
-        console.log("\nUnallocated Transactions:", unallocated);
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-        console.log("\nConnection closed.");
+        const conn = await mongoose.connect(uri);
+        console.log(`MongoDB Connected: ${conn.connection.host} 🚀`);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exit(1); // Exit process with failure
     }
+};
+
+module.exports = connectDB;
 }
 
 // Run the main function and catch any errors
 main().catch(console.error);
+
+//PiggyBank Model
+const mongoose = require('mongoose');
+
+const piggyBankSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Please add a name'],
+        trim: true,
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: ['savings', 'treat', 'sos', 'debt', 'custom'], // Ensures type is one of these values
+    },
+    balance: {
+        type: Number,
+        required: true,
+        default: 0.0,
+    },
+    goal: {
+        type: Number,
+        required: true,
+    },
+    completed: {
+        type: Boolean,
+        default: false,
+    },
+    opened: {
+        type: Boolean,
+        default: false,
+    },
+    // This creates a relationship with the Transaction model
+    transactions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transaction',
+    }],
+    iconId: {
+        type: String,
+        default: 'default_piggy',
+    },
+}, {
+    // This automatically adds `createdAt` and `updatedAt` fields
+    timestamps: true,
+});
+
+/**
+ * @description Add funds to a piggy bank and link the transaction.
+ * @param {string} piggybankId The ID of the piggy bank to update.
+ * @param {number} amount The amount to add.
+ * @param {string} transactionId The ID of the transaction to link.
+ */
+piggyBankSchema.statics.addFunds = async function(piggybankId, amount, transactionId) {
+    // The `timestamps: true` option automatically handles `updatedAt`
+    return this.findByIdAndUpdate(piggybankId, {
+        $inc: { balance: amount },
+        $push: { transactions: transactionId },
+    });
+};
+
+// The first argument 'PiggyBank' is the singular name of the model.
+// Mongoose automatically looks for the plural, lowercased version of your model name.
+// Thus, the model 'PiggyBank' is for the 'piggybanks' collection in the database.
+module.exports = mongoose.model('PiggyBank', piggyBankSchema);
+
+//Transaction Model
+const mongoose = require('mongoose');
+
+const transactionSchema = new mongoose.Schema({
+    amount: {
+        type: Number,
+        required: [true, 'Please add an amount'],
+    },
+    label: {
+        type: String,
+        required: [true, 'Please add a label'],
+        trim: true,
+    },
+    source: {
+        type: String,
+        required: true,
+    },
+    // Link to the PiggyBank this transaction is allocated to
+    piggyBankId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PiggyBank',
+        default: null, // `null` indicates it's unallocated
+    },
+    note: {
+        type: String,
+        default: '',
+    },
+}, {
+    timestamps: true,
+});
+
+/**
+ * @description Allocate a transaction to a specific piggy bank.
+ * @param {string} transactionId The ID of the transaction.
+ * @param {string} piggybankId The ID of the piggy bank to allocate to.
+ */
+transactionSchema.statics.allocate = async function(transactionId, piggybankId) {
+    // 1. Find the transaction and update its piggyBankId
+    const transaction = await this.findByIdAndUpdate(
+        transactionId,
+        { piggyBankId: piggybankId },
+        { new: true } // Return the updated document
+    );
+
+    if (!transaction) {
+        throw new Error('Transaction not found');
+    }
+
+    // 2. Use the PiggyBank model to add the funds
+    // We use mongoose.model('PiggyBank') to avoid circular dependency issues
+    await mongoose.model('PiggyBank').addFunds(
+        piggybankId,
+        transaction.amount,
+        transaction._id
+    );
+
+    return transaction;
+};
+
+
+module.exports = mongoose.model('Transaction', transactionSchema);
+
+
+
+
+
+
+
+
+const PiggyBank = require('../models/piggyBankModel');
+const Transaction = require('../models/transactionModel');
+
+// @desc    Create a new piggy bank
+// @route   POST /api/piggybanks
+exports.createPiggyBank = async (req, res) => {
+    try {
+        const { name, type, goal } = req.body;
+        const newPiggyBank = await PiggyBank.create({ name, type, goal });
+        res.status(201).json(newPiggyBank);
+    } catch (error) {
+        res.status(400).json({ message: "Failed to create piggy bank", error: error.message });
+    }
+};
+
+// @desc    Get all piggy banks
+// @route   GET /api/piggybanks
+exports.getAllPiggyBanks = async (req, res) => {
+    try {
+        const piggybanks = await PiggyBank.find({}).populate('transactions'); // .populate shows the full transaction docs
+        res.status(200).json(piggybanks);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Allocate an existing transaction
+// @route   POST /api/transactions/allocate
+exports.allocateTransaction = async (req, res) => {
+    try {
+        const { transactionId, piggybankId } = req.body;
+        const updatedTransaction = await Transaction.allocate(transactionId, piggybankId);
+        res.status(200).json({
+            message: `Successfully allocated $${updatedTransaction.amount} to piggy bank ${piggybankId}`,
+            transaction: updatedTransaction
+        });
+    } catch (error) {
+        res.status(400).json({ message: "Allocation failed", error: error.message });
+    }
+};
