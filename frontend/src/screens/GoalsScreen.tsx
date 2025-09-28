@@ -26,7 +26,6 @@ export default function GoalsScreen() {
   // Fetch data when screen comes into focus
    useFocusEffect(
     useCallback(() => {
-      console.log('🐷 GoalsScreen focused - refreshing piggy banks...');
       fetchPiggyBanks();
     }, [])
   );
@@ -36,7 +35,6 @@ export default function GoalsScreen() {
 
      // Set up auto-refresh every 30 seconds
      const interval = setInterval(() => {
-      console.log('🔄 Auto-refreshing piggy banks...');
       fetchPiggyBanks();
     }, 30000);
 

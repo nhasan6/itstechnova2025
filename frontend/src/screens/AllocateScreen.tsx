@@ -57,15 +57,11 @@ export default function AllocateScreen() {
 
   const fetchTransactions = async () => {
     try {
-      console.log('📊 Fetching transactions for allocation...');
       const data = await transactionService.getAll();
-      console.log('📊 Transactions received:', data);
-      // Only show unallocated transactions with negative amounts (expenses)
+      // Only show unallocated transactions that haven't been logged yet
       const unallocatedExpenses = data.filter((t: Transaction) => !t.piggyBankId);
-      console.log('📊 Unallocated expenses:', unallocatedExpenses);
       setTransactions(unallocatedExpenses);
     } catch (error) {
-      console.error("Error fetching transactions:", error)
       // Mock data for demo
       setTransactions([
         { _id: "1", amount: -25.5, label: "Coffee & Pastry", source: "manual", note: "Category: Food", createdAt: "2024-01-15", updatedAt: "2024-01-15" },
@@ -77,12 +73,9 @@ export default function AllocateScreen() {
 
   const fetchPiggyBanks = async () => {
     try {
-      console.log('🏦 Fetching piggy banks for allocation...');
       const data = await piggyBankService.getAll();
-      console.log('🏦 Piggy banks received:', data);
       // Only show unopened piggy banks
       const unopenedBanks = data.filter((bank: PiggyBank) => !bank.opened);
-      console.log('🏦 Unopened piggy banks:', unopenedBanks);
       setPiggyBanks(unopenedBanks);
     } catch (error) {
       console.error("Error fetching piggy banks:", error)
@@ -99,9 +92,7 @@ export default function AllocateScreen() {
     setIsLoading(true)
 
     try {
-      console.log('💰 Allocating transaction:', transactionId, 'to piggy bank:', piggyBankId);
       await transactionService.allocate(transactionId, piggyBankId);
-      console.log('💰 Transaction allocated successfully');
       
       Alert.alert("Success", "Transaction allocated successfully!")
       fetchTransactions()
@@ -166,7 +157,7 @@ export default function AllocateScreen() {
 
         {/* Unallocated Transactions */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Purchases</Text>
+          <Text style={styles.sectionTitle}>Recent Saves</Text>
 
           {transactions.length > 0 ? (
             transactions.map((transaction) => (

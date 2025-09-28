@@ -50,10 +50,6 @@ export default function AIAssistantScreen() {
 
   const sendMessage = async () => {
     if (!inputText.trim()) return
-    
-    console.log('🚀 sendMessage function called!');
-    console.log('📝 Input text:', inputText.trim());
-
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputText.trim(),
@@ -66,10 +62,8 @@ export default function AIAssistantScreen() {
     setIsLoading(true)
 
     try {
-      // Use the AI service from our API
-      console.log('Sending message to AI:', inputText.trim());
+      // use ai service from api
       const aiResponse = await aiService.getAdvice(inputText.trim())
-      console.log('Received AI response:', aiResponse);
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

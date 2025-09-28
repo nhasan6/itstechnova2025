@@ -45,7 +45,7 @@ export default function HomeScreen() {
   const fetchTransactions = async () => {
     try {
       const data = await transactionService.getAll()
-      setTransactions(data.slice(0, 5)) // Show only recent 5
+      setTransactions(data)
     } catch (error) {
       console.error("Error fetching transactions:", error)
       // Mock data for demo
@@ -59,9 +59,7 @@ export default function HomeScreen() {
 
   const fetchPiggyBanks = async () => {
     try {
-      console.log('🏦 Fetching piggy banks...');
       const data = await piggyBankService.getAll()
-      console.log('🏦 Piggy banks received:', data);
       setPiggyBanks(data)
       const total = data.reduce((sum: number, bank: PiggyBank) => sum + bank.balance, 0)
       setTotalBalance(total)
@@ -174,7 +172,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
 
-          {transactions.map((transaction) => (
+          {transactions.slice(0,5).map((transaction) => (
             <View key={transaction._id} style={styles.transactionItem}>
               <View style={styles.transactionIcon}>
                 <Ionicons
