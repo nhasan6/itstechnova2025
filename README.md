@@ -1,33 +1,29 @@
-# itstechnova2025
+# ItsTechnova2025 
 
-#About
+## About
 
-Girl Math is a personal finance management app that helps users track income, expenses, and savings goals. It provides insights and visualizations to make budgeting simple, fun, and effective.
+**Girl Math** is a financial management app designed to make budgeting easy, fun, and empowering for women+. It helps you track your savings, set meaningful goals, and make smarter financial choices — without the judgment By transforming everyday small wins (like skipping that coffee or walking instead of driving) into “free money,” Girl Math turns daily decisions into real financial progress.
 
-#Features
+## Features
 
-💰 Log Free Money
-  - User inputs instances where they consider money saved or “earned for free”. (i.e. not buying coffee, skipping a meal, saving on transportation)
-  - Start by asking income, common spending habits, personal goals
-  - Make buttons for each type of average spending habit user has (coffe, breakfast, eating out, luxuries,)
+🎯 Goal Creator
+- Set personalized financial goals, whether big or small — from buying a new sweater to saving for a girls trip. Track your progress and watch your goals come to life.
 
-😊 Allocate Free Money
-  - Treat your self
-  - Savings
-  - Fun fund
-  - Self-care
-  - Other (customizable category)
+💰 "Free Money" Tracker
+- Log every time you skip a purchase or save unexpectedly. This "free money" adds up and can be redirected into your goals
 
-📊 Track Allocations
-  - Analytics, notifications, visual analytics dashboard
-  - Clear piggy: a visual ot show how close to the goal the person is, and user can choose the piggbank for each savings goal. When a a goal is preed on it shows all transactions made towards the goal
-  - Ensure the app has a way of transferring between savings
-  - May be separated by different accounts? Like different debit/credit cards
-  - Add in visuals like graphical representation, add a button to decide how data should be displayed (ie, piggybank, graphs, etc)
-  - When goal is achieved you must shatter the piggy bank by clicking then a celebration is made specific to the goal
+ 🔄 Instant Reallocation
+- Once you've logged free money, move it into different categories/custom goals.
 
-#Why Girl Math?
-  - Makes budgeting enjoyable and visually engaging.
-  - Encourages mindful spending through tracking and visualization.
-  - Empowers users to save without feeling restricted.
+🤖 AI Chatbot (Gemini)
+- Get 24/7 advice in plain language without the manspllaining. 
 
+🎉 Gamified Savings
+- Track your progress with visual elements like piggy banks, confetti, and celebrations. 
+
+## Tech Stack
+- **Frontend:** React Native (Expo, React 19)
+- **Backend:** Node.js + Express.js (REST API)
+- **AI Integration:** Gemini API
+- **Database:** MongoDB Atlas
+- **Design:** Figma, V0
